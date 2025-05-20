@@ -6,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import fr.cpe.microbitmanager.R
 import fr.cpe.microbitmanager.model.ServerInfo
-import fr.cpe.microbitmanager.model.ServerList
+import androidx.constraintlayout.widget.ConstraintLayout
 
-class ServerAdapter(val context : Context): RecyclerView.Adapter<ServerAdapter.ServerViewHolder>() {
+class ServerAdapter(val context : Context, private val onRefreshClicked: (ServerInfo) -> Unit): RecyclerView.Adapter<ServerAdapter.ServerViewHolder>() {
     private var serverList = emptyList<ServerInfo>()
     class ServerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val serverStatus: TextView = view.findViewById(R.id.status)
         val serverIp: TextView = view.findViewById(R.id.ip_address)
         val refreshBtn: Button = view.findViewById(R.id.refresh)
+        val serverCard : ConstraintLayout = view.findViewById(R.id.server_card)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServerViewHolder {
@@ -34,12 +34,12 @@ class ServerAdapter(val context : Context): RecyclerView.Adapter<ServerAdapter.S
     override fun onBindViewHolder(holder: ServerViewHolder, position: Int) {
         val server = serverList[position]
         holder.serverIp.text = server.ip_address
+        holder.serverStatus.text = if(server.status) "✅" else "❌"
         holder.refreshBtn.setOnClickListener{
-            Toast.makeText(
-                this.context,
-                "Not Implemented yet !",
-                Toast.LENGTH_SHORT,
-            ).show()
+            onRefreshClicked(server)
+        }
+        holder.serverCard.setOnClickListener{
+            // TODO open fragment with microbits
         }
     }
 

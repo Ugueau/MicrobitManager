@@ -1,9 +1,20 @@
 package fr.cpe.microbitmanager.model
 
+import android.content.Context
+
 object ServerList {
     private var serverList = ArrayList<ServerInfo>()
 
-    fun addNewServer(newServer : ServerInfo)
+    init {
+        serverList.add(ServerInfo("example", "example IP", false))
+    }
+
+    fun init(context: Context) {
+        val savedList = ServerStorage.loadServerList(context)
+        serverList = ArrayList(savedList)  // Replace dummy list
+    }
+
+    fun addNewServer(context :Context, newServer : ServerInfo)
     {
         var isUpdated = false;
         serverList.forEach { serv ->
@@ -17,10 +28,16 @@ object ServerList {
         if(!isUpdated){
             serverList.add(newServer)
         }
+        ServerStorage.saveServerList(context, serverList)
     }
 
     fun asList() : List<ServerInfo>
     {
         return serverList.toList()
+    }
+
+    fun size() : Int
+    {
+        return serverList.size
     }
 }

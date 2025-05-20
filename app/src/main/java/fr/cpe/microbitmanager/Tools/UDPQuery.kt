@@ -1,4 +1,4 @@
-package fr.cpe.microbitmanager.UDPTools
+package fr.cpe.microbitmanager.Tools
 
 import android.util.Log
 import java.io.IOException

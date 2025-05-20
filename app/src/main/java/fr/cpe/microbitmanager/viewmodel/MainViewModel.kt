@@ -3,17 +3,17 @@ package fr.cpe.microbitmanager.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    private val _userName = MutableLiveData<String>()
-    val userName: LiveData<String> get() = _userName
 
-    init {
-        loadUser()
-    }
-
-    private fun loadUser() {
-        // Simulate fetching user name
-        _userName.value = "John Doe"
+    fun tryAccessToServer(ipAddress : String): LiveData<Boolean>
+    {
+        val liveData = MutableLiveData<Boolean>()
+        viewModelScope.launch {
+            val data = true
+            liveData.postValue(data)
+        }
+        return liveData
     }
 }

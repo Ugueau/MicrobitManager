@@ -11,7 +11,7 @@ import fr.cpe.microbitmanager.R
 import fr.cpe.microbitmanager.model.ServerInfo
 import androidx.constraintlayout.widget.ConstraintLayout
 
-class ServerAdapter(val context : Context, private val onRefreshClicked: (ServerInfo) -> Unit): RecyclerView.Adapter<ServerAdapter.ServerViewHolder>() {
+class ServerAdapter(val context : Context, private val onRefreshClicked: (ServerInfo) -> Unit, private val openServerDetails: (ServerInfo) -> Unit): RecyclerView.Adapter<ServerAdapter.ServerViewHolder>() {
     private var serverList = emptyList<ServerInfo>()
     class ServerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val serverStatus: TextView = view.findViewById(R.id.status)
@@ -39,7 +39,7 @@ class ServerAdapter(val context : Context, private val onRefreshClicked: (Server
             onRefreshClicked(server)
         }
         holder.serverCard.setOnClickListener{
-            // TODO open fragment with microbits
+            openServerDetails(this.serverList[position])
         }
     }
 

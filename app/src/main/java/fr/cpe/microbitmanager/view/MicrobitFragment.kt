@@ -7,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import fr.cpe.microbitmanager.databinding.FragmentMicrobitBinding
+import fr.cpe.microbitmanager.model.ServerInfo
 import fr.cpe.microbitmanager.viewmodel.MainViewModel
 
-class MicrobitFragment : Fragment() {
+class MicrobitFragment(private val server : ServerInfo) : Fragment() {
     private lateinit var viewModel: MainViewModel
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -76,15 +76,10 @@ class MainActivity : AppCompatActivity() {
 
     fun openServerDetails(server : ServerInfo)
     {
-        val fragment = MicrobitFragment()
-        val args = Bundle()
-        args.putString("serverIp", server.ip_address)
-        fragment.arguments = args
-
+        val fragment = MicrobitFragment(server)
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_microbit, fragment)
             .addToBackStack(null)
             .commit()
-
     }
 }

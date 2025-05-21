@@ -1,17 +1,19 @@
 package fr.cpe.microbitmanager.view
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import fr.cpe.microbitmanager.R
 import fr.cpe.microbitmanager.model.ServerInfo
 import androidx.constraintlayout.widget.ConstraintLayout
 
-class ServerAdapter(val context : Context, private val onRefreshClicked: (ServerInfo) -> Unit, private val openServerDetails: (ServerInfo) -> Unit): RecyclerView.Adapter<ServerAdapter.ServerViewHolder>() {
+class ServerAdapter(private val onRefreshClicked: (ServerInfo) -> Unit, private val openServerDetails: (ServerInfo) -> Unit, private val removeServer: (ServerInfo) -> Unit): RecyclerView.Adapter<ServerAdapter.ServerViewHolder>() {
     private var serverList = emptyList<ServerInfo>()
     class ServerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val serverStatus: TextView = view.findViewById(R.id.status)
@@ -30,7 +32,6 @@ class ServerAdapter(val context : Context, private val onRefreshClicked: (Server
         return this.serverList.size
     }
 
-    // TODO add refresh button action
     override fun onBindViewHolder(holder: ServerViewHolder, position: Int) {
         val server = serverList[position]
         holder.serverIp.text = server.ip_address
@@ -40,6 +41,10 @@ class ServerAdapter(val context : Context, private val onRefreshClicked: (Server
         }
         holder.serverCard.setOnClickListener{
             openServerDetails(this.serverList[position])
+        }
+        holder.serverCard.setOnLongClickListener {
+            removeServer(server)
+            true
         }
     }
 

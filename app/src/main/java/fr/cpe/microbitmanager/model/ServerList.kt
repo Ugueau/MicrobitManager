@@ -5,10 +5,6 @@ import android.content.Context
 object ServerList {
     private var serverList = ArrayList<ServerInfo>()
 
-    init {
-        serverList.add(ServerInfo("example", "example IP", false))
-    }
-
     fun init(context: Context) {
         val savedList = ServerStorage.loadServerList(context)
         serverList = ArrayList(savedList)  // Replace dummy list
@@ -28,6 +24,22 @@ object ServerList {
         if(!isUpdated){
             serverList.add(newServer)
         }
+        ServerStorage.saveServerList(context, serverList)
+    }
+
+    fun updateServerStatus(context: Context, ipAddress : String, status : Boolean)
+    {
+        serverList.forEach {
+            if(it.ip_address == ipAddress)
+            {
+                it.status = status
+            }
+        }
+    }
+
+    fun removeServer(context :Context, server: ServerInfo)
+    {
+        serverList.remove(server)
         ServerStorage.saveServerList(context, serverList)
     }
 

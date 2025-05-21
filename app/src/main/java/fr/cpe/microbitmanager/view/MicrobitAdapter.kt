@@ -14,7 +14,11 @@ import fr.cpe.microbitmanager.model.ServerInfo
 class MicrobitAdapter : RecyclerView.Adapter<MicrobitAdapter.MicrobitViewHolder>() {
     var microbitList = emptyList<MicrobitInfo>()
     class MicrobitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+        val name: TextView = view.findViewById<TextView>(R.id.microbit_name)
+        val config: TextView = view.findViewById<TextView>(R.id.microbit_config)
+        val temperature: TextView = view.findViewById<TextView>(R.id.temperature)
+        val luminosity: TextView = view.findViewById<TextView>(R.id.luminosity)
+        val humidity: TextView = view.findViewById<TextView>(R.id.humidity)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MicrobitViewHolder {
@@ -28,7 +32,17 @@ class MicrobitAdapter : RecyclerView.Adapter<MicrobitAdapter.MicrobitViewHolder>
     }
 
     override fun onBindViewHolder(holder: MicrobitViewHolder, position: Int) {
+        val microbit = microbitList[position]
+        holder.name.text = "${microbit.name}:${microbit.id}"
+        holder.config.text = microbit.formatConfig()
+        holder.temperature.text = "T : ${microbit.temperature}°C"
+        holder.luminosity.text = "L : ${microbit.luminosity} lux"
+        holder.humidity.text = "H : ${microbit.humidity} g.m-3"
+    }
 
+    fun setNewMicrobitList(newMicrobitList : List<MicrobitInfo>)
+    {
+        this.microbitList = newMicrobitList
     }
 
 }

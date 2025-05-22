@@ -12,10 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.cpe.microbitmanager.R
 import androidx.recyclerview.widget.ItemTouchHelper
 import fr.cpe.microbitmanager.model.MicrobitInfo
+import fr.cpe.microbitmanager.model.ServerInfo
 import fr.cpe.microbitmanager.viewmodel.MainViewModel
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 
-class MicrobitConfigFragment(private val microbit : MicrobitInfo) : Fragment() {
-    private lateinit var mainViewModel: MainViewModel
+class MicrobitConfigFragment(
+    private val microbit : MicrobitInfo,
+    private val server: ServerInfo
+)
+    : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,6 +38,7 @@ class MicrobitConfigFragment(private val microbit : MicrobitInfo) : Fragment() {
         val recyclerViewAdapter = MicrobitConfigAdapter()
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = recyclerViewAdapter
+        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         val microbit_name: TextView = view.findViewById(R.id.microbit_config_name)
         microbit_name.text = "${microbit.name}:${microbit.id}"
@@ -64,6 +71,14 @@ class MicrobitConfigFragment(private val microbit : MicrobitInfo) : Fragment() {
 
                 val microbit_order: TextView = view.findViewById(R.id.microbit_config_order)
                 microbit_order.text = "Current configuration : ${microbit.formatConfig()}"
+                viewModel.updateMicrobitConfiguration(server, microbit)
+                    .observe(viewLifecycleOwner) { success ->
+                        if (success) {
+                            Toast.makeText(requireContext(), "Configuration envoyée en UDP", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(requireContext(), "e: Échec de l'envoi UDP", Toast.LENGTH_SHORT).show()
+                        }
+                    }
             }
 
 

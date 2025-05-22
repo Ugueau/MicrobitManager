@@ -35,6 +35,7 @@ object ServerList {
                 it.status = status
             }
         }
+        ServerStorage.saveServerList(context, serverList)
     }
 
     fun removeServer(context :Context, server: ServerInfo)

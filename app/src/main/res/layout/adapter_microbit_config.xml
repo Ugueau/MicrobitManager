@@ -8,7 +8,7 @@
     card_view:cardElevation="4dp">
 
     <TextView
-        android:id="@+id/config_item_label"
+        android:id="@+id/microbit_config_sensor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"

@@ -70,4 +70,18 @@ class MainViewModel : ViewModel() {
     {
         ServerList.removeServer(context, server)
     }
+
+    fun updateMicrobitConfiguration(server: ServerInfo, microbit: MicrobitInfo) : LiveData<Boolean>
+    {
+        val liveData = MutableLiveData<Boolean>()
+        viewModelScope.launch {
+            val udpManager = UDPExchangeManager(server.ip_address, PORT)
+            if (udpManager.isUdpServerReachable())
+            {
+                val data = udpManager.updateMicrobitConfiguration(microbit)
+                liveData.postValue(data)
+            }
+        }
+        return liveData
+    }
 }

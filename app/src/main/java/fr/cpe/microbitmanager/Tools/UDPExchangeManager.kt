@@ -74,7 +74,7 @@ class UDPExchangeManager(
         }
     }
 
-    suspend fun updateMicrobitConfiguration(microbit: MicrobitInfo, timeoutMs: Int)
+    suspend fun updateMicrobitConfiguration(microbit: MicrobitInfo, timeoutMs: Int = 2000) : Boolean
     {
         return withContext(Dispatchers.IO) {
             try {
@@ -89,20 +89,11 @@ class UDPExchangeManager(
                 val sendPacket = DatagramPacket(sendData, sendData.size, serverAddress, port)
                 socket.send(sendPacket)
 
-                // Wait for a response
-                val buffer = ByteArray(2048)
-                val receivePacket = DatagramPacket(buffer, buffer.size)
-                socket.receive(receivePacket)
-                val jsonString = String(receivePacket.data, 0, receivePacket.length, Charsets.UTF_8)
-                val listType = object : TypeToken<List<MicrobitInfo>>() {}.type
-                val microbitList: List<MicrobitInfo> = Gson().fromJson(jsonString, listType)
-                socket.close()
-
-                microbitList
+                true
             } catch (e: SocketTimeoutException) {
-                emptyList<MicrobitInfo>() // No response in time
+                false
             } catch (e: Exception) {
-                emptyList<MicrobitInfo>()
+                false
             }
         }
     }

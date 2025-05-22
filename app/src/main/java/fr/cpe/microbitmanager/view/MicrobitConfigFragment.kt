@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import fr.cpe.microbitmanager.R
@@ -26,6 +27,11 @@ class MicrobitConfigFragment(private val microbit : MicrobitInfo) : Fragment() {
         val recyclerViewAdapter = MicrobitConfigAdapter()
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = recyclerViewAdapter
+
+        val microbit_name : TextView = view.findViewById<TextView>(R.id.microbit_config_name)
+        microbit_name.text = "${microbit.name}:${microbit.id}"
+        val microbit_order : TextView = view.findViewById<TextView>(R.id.microbit_config_order)
+        microbit_order.text = "Current configuration : ${microbit.formatConfig()}"
 
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(

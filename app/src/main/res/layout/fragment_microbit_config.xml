@@ -8,6 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/material_dynamic_primary99"
         android:layout_height="match_parent">
 
         <TextView
@@ -16,19 +17,32 @@
             android:layout_height="wrap_content"
             android:text="microbit:id"
             android:layout_margin="50dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/microbit_config_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="50dp"
-            app:layout_constraintTop_toBottomOf="@+id/microbit_config_name"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/microbit_config_order"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             />
+
+        <TextView
+            android:id="@id/microbit_config_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current configuration : TLH"
+            app:layout_constraintTop_toBottomOf="@+id/microbit_config_name"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

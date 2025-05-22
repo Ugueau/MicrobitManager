@@ -16,6 +16,8 @@ const val PORT = 10000
 
 class MainViewModel : ViewModel() {
 
+    lateinit var watchedServer : ServerInfo
+
     fun restoreServerList(context: Context)
     {
         ServerList.init(context)
@@ -54,6 +56,7 @@ class MainViewModel : ViewModel() {
 
     fun getMicrobitList(ipAddress : String): LiveData<List<MicrobitInfo>>
     {
+        watchedServer = ServerList.getServer(ipAddress)!!
         val liveData = MutableLiveData<List<MicrobitInfo>>()
         viewModelScope.launch {
             val udpManager = UDPExchangeManager(ipAddress, PORT)

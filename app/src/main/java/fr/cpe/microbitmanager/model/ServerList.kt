@@ -53,4 +53,13 @@ object ServerList {
     {
         return serverList.size
     }
+
+    fun getServer(ipAddress : String) : ServerInfo?
+    {
+        serverList.forEach {
+            if (it.ip_address == ipAddress)
+                return it
+        }
+        return null
+    }
 }

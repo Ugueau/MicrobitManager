@@ -44,7 +44,7 @@ class MicrobitFragment(private  var server : ServerInfo) : Fragment() {
 
     private fun openMicrobitConfig(microbit : MicrobitInfo)
     {
-        val fragment = MicrobitConfigFragment(microbit)
+        val fragment = MicrobitConfigFragment(microbit, server)
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)

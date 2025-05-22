@@ -2,7 +2,7 @@ package fr.cpe.microbitmanager.model
 
 data class MicrobitInfo(
     var name : String,
-    var id : Int,
+    var id : String,
     var temperature: Int,
     var humidity : Int,
     var luminosity : Int,

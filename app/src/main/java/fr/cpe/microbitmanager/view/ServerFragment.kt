@@ -75,7 +75,7 @@ class ServerFragment : Fragment() {
             recyclerViewAdapter.notifyDataSetChanged()
             if(status)
             {
-                val fragment = MicrobitFragment()
+                val fragment = MicrobitFragment(server)
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)

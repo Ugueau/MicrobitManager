@@ -14,9 +14,9 @@ import fr.cpe.microbitmanager.model.MicrobitInfo
 import fr.cpe.microbitmanager.model.ServerInfo
 import fr.cpe.microbitmanager.viewmodel.MainViewModel
 
-class MicrobitFragment() : Fragment() {
+class MicrobitFragment(private  var server : ServerInfo) : Fragment() {
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var server : ServerInfo
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -24,7 +24,6 @@ class MicrobitFragment() : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_microbit, container, false)
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        server = mainViewModel.watchedServer
         return view
     }
 

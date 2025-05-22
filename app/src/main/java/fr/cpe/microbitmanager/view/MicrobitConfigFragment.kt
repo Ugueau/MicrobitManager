@@ -15,13 +15,13 @@ import fr.cpe.microbitmanager.model.MicrobitInfo
 import fr.cpe.microbitmanager.model.ServerInfo
 import fr.cpe.microbitmanager.viewmodel.MainViewModel
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 
 class MicrobitConfigFragment(
     private val microbit : MicrobitInfo,
     private val server: ServerInfo
 )
     : Fragment() {
+        private lateinit var mainViewModel : MainViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

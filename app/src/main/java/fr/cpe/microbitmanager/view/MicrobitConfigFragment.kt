@@ -35,7 +35,14 @@ class MicrobitConfigFragment(
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.microbit_config_recyclerview)
-        val recyclerViewAdapter = MicrobitConfigAdapter()
+        val sensorListOrder = listOf(
+            "temperature" to microbit.temperatureConfigIndex,
+            "humidity" to microbit.humidityConfigIndex,
+            "luminosity" to microbit.luminosityConfigIndex
+        ).sortedBy { it.second }
+            .map { it.first }
+
+        val recyclerViewAdapter = MicrobitConfigAdapter(sensorListOrder.toMutableList())
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = recyclerViewAdapter
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
@@ -76,7 +83,7 @@ class MicrobitConfigFragment(
                         if (success) {
                             Toast.makeText(requireContext(), "Configuration envoyée en UDP", Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(requireContext(), "e: Échec de l'envoi UDP", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Échec de l'envoi UDP", Toast.LENGTH_SHORT).show()
                         }
                     }
             }

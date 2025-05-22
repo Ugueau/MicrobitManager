@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import fr.cpe.microbitmanager.R
 
-class MicrobitConfigAdapter() : RecyclerView.Adapter<MicrobitConfigAdapter.ConfigViewHolder>() {
-    private val configList = mutableListOf<String>("temperature", "humidity", "luminosity")
+class MicrobitConfigAdapter(private val sensorOrderList: MutableList<String>) : RecyclerView.Adapter<MicrobitConfigAdapter.ConfigViewHolder>() {
+
     inner class ConfigViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val label: TextView = view.findViewById<TextView>(R.id.microbit_config_sensor)
     }
@@ -20,19 +20,19 @@ class MicrobitConfigAdapter() : RecyclerView.Adapter<MicrobitConfigAdapter.Confi
     }
 
     override fun onBindViewHolder(holder: ConfigViewHolder, position: Int) {
-        val item = configList[position]
+        val item = sensorOrderList[position]
         holder.label.text = item.replaceFirstChar { it.uppercaseChar() }
     }
 
-    override fun getItemCount(): Int = configList.size
+    override fun getItemCount(): Int = sensorOrderList.size
 
     fun onItemMove(from: Int, to: Int) {
-        val movedItem = configList.removeAt(from)
-        configList.add(to, movedItem)
+        val movedItem = sensorOrderList.removeAt(from)
+        sensorOrderList.add(to, movedItem)
         notifyItemMoved(from, to)
     }
 
     fun getCurrentOrder(): List<String> {
-        return configList.map { it }
+        return sensorOrderList.map { it }
     }
 }

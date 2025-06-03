@@ -11,6 +11,7 @@ import java.net.InetAddress
 import java.net.SocketTimeoutException
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.json.JSONObject
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -38,7 +39,8 @@ class UDPExchangeManager(
                 socket.receive(receivePacket)
                 socket.close()
 
-                true
+                val responseText = decrypt(receivePacket.data)
+                responseText == "1"
             } catch (e: SocketTimeoutException) {
                 false // No response in time
             } catch (e: Exception) {
@@ -63,7 +65,7 @@ class UDPExchangeManager(
                 val buffer = ByteArray(2048)
                 val receivePacket = DatagramPacket(buffer, buffer.size)
                 socket.receive(receivePacket)
-                val jsonString = String(receivePacket.data, 0, receivePacket.length, Charsets.UTF_8)
+                val jsonString = decrypt(receivePacket.data) ?: return@withContext emptyList()
                 val listType = object : TypeToken<List<MicrobitInfo>>() {}.type
                 val microbitList: List<MicrobitInfo> = Gson().fromJson(jsonString, listType)
                 socket.close()
@@ -116,6 +118,29 @@ class UDPExchangeManager(
 
         val json = ("""{"iv":"$ivBase64","data":"$dataBase64"}""").toByteArray()
         return json
+    }
+
+    private fun decrypt(response: ByteArray): String? {
+        return try {
+            val jsonString = String(response, Charsets.UTF_8)
+            val json = JSONObject(jsonString)
+
+            val ivBase64 = json.getString("iv")
+            val dataBase64 = json.getString("data")
+
+            val iv = Base64.decode(ivBase64, Base64.NO_WRAP)
+            val encrypted = Base64.decode(dataBase64, Base64.NO_WRAP)
+
+            val secretKey = SecretKeySpec(key, "AES")
+            val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, IvParameterSpec(iv))
+
+            val decryptedBytes = cipher.doFinal(encrypted)
+            String(decryptedBytes, Charsets.UTF_8)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }
 

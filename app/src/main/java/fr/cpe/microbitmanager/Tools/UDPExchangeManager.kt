@@ -1,18 +1,21 @@
 package fr.cpe.microbitmanager.Tools
 
-import android.util.Log
+import android.util.Base64
 import fr.cpe.microbitmanager.model.MicrobitInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.IOException
+import kotlin.random.Random
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.SocketTimeoutException
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
-private const val PORT = 10000 // Constante arbitraire du sujet
+private val key = "1234567890abcdef".toByteArray(Charsets.UTF_8)
 
 class UDPExchangeManager(
     private val ip: String,
@@ -24,7 +27,7 @@ class UDPExchangeManager(
                 val socket = DatagramSocket()
                 socket.soTimeout = timeoutMs
 
-                val sendData = "is_reachable".toByteArray()
+                val sendData = encrypt("is_reachable")
                 val serverAddress = InetAddress.getByName(ip)
                 val sendPacket = DatagramPacket(sendData, sendData.size, serverAddress, port)
                 socket.send(sendPacket)
@@ -51,7 +54,7 @@ class UDPExchangeManager(
                 val socket = DatagramSocket()
                 socket.soTimeout = timeoutMs
 
-                val sendData = "get_microbits".toByteArray()
+                val sendData = encrypt("get_microbits")
                 val serverAddress = InetAddress.getByName(ip)
                 val sendPacket = DatagramPacket(sendData, sendData.size, serverAddress, port)
                 socket.send(sendPacket)
@@ -83,7 +86,7 @@ class UDPExchangeManager(
 
                 val microbitJson = Gson().toJson(microbit)
 
-                val sendData = "configuration :$microbitJson".toByteArray()
+                val sendData = encrypt("configuration :$microbitJson")
 
                 val serverAddress = InetAddress.getByName(ip)
                 val sendPacket = DatagramPacket(sendData, sendData.size, serverAddress, port)
@@ -96,6 +99,23 @@ class UDPExchangeManager(
                 false
             }
         }
+    }
+
+    private fun encrypt(message: String) : ByteArray {
+        val secretKey = SecretKeySpec(key, "AES")
+
+        val iv = Random.Default.nextBytes(16)
+        val ivSpec = IvParameterSpec(iv)
+
+        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec)
+        val encrypted = cipher.doFinal(message.toByteArray(Charsets.UTF_8))
+
+        val ivBase64 = Base64.encodeToString(iv, Base64.NO_WRAP)
+        val dataBase64 = Base64.encodeToString(encrypted, Base64.NO_WRAP)
+
+        val json = ("""{"iv":"$ivBase64","data":"$dataBase64"}""").toByteArray()
+        return json
     }
 }
 
